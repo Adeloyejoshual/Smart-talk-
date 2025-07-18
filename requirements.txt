@@ -1,0 +1,6 @@
+flask
+gunicorn
+psycopg2-binary
+flask-bcrypt
+flask-login
+werkzeug
