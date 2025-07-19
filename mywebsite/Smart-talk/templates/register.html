@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Talk - Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        .register-container h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .footer-links {
+            margin-top: 10px;
+        }
+        .social-btn {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .google { background: #DB4437; color: white; }
+        .facebook { background: #3B5998; color: white; }
+        .apple { background: black; color: white; }
+        .x { background: #000; color: white; }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Create Account</h1>
+        <button class="social-btn google">Sign up with Google</button>
+        <button class="social-btn facebook">Sign up with Facebook</button>
+        <button class="social-btn apple">Sign up with Apple</button>
+        <button class="social-btn x">Sign up with X</button>
+
+        <form>
+            <input type="text" placeholder="Username" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit">Register</button>
+        </form>
+
+        <div class="footer-links">
+            <a href="{{ url_for('login') }}">Already have an account? Login</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+print("Welcome to the Adventure Game!")
+print("You're standing at the entrance of a dark cave.")
+
+choice = input("Do you want to ENTER or RUN away? ").lower()
+
+if choice == "enter":
+    print("You enter the cave. It's dark and cold.")
+    print("You see two paths: LEFT and RIGHT.")
+
+    path = input("Which way do you go? ").lower()
+
+    if path == "left":
+        print("You found treasure! You win! 🏆")
+    elif path == "right":
+        print("A monster eats you! Game Over ☠️")
+    else:
+        print("You got lost. Game Over.")
+elif choice == "run":
+    print("You ran away safely. Maybe next time you'll be braver.")
+else:
+    print("I don't understand what you did. Game Over.")
