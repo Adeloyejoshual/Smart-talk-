@@ -1,5 +1,6 @@
 import ytDlp from "yt-dlp-exec";
 
+/* ===================== MAIN FUNCTION ===================== */
 export const extractMedia = async (url) => {
   try {
     const data = await ytDlp(url, {
@@ -14,23 +15,60 @@ export const extractMedia = async (url) => {
     });
 
     if (!data) {
-      throw new Error("No data returned from yt-dlp");
+      throw new Error("No data returned from extractor");
     }
 
+    const formats = cleanFormats(data.formats || []);
+
     return {
-      title: data.title,
-      thumbnail: data.thumbnail,
-      formats: (data.formats || [])
-        .filter(f => f.url)
-        .map(f => ({
-          quality: f.format_note || "unknown",
-          url: f.url
-        }))
+      title: data.title || "Untitled",
+      thumbnail: data.thumbnail || "",
+      duration: data.duration || null,
+
+      // best available download (top quality)
+      best: getBestFormat(formats),
+
+      // all cleaned formats
+      formats
     };
 
   } catch (err) {
-    console.error("TikTok extraction error:", err.message);
+    console.error("Extractor error:", err.message);
 
-    throw new Error("Failed to process video");
+    return {
+      title: "Failed to process media",
+      thumbnail: "",
+      formats: [],
+      best: null,
+      error: err.message
+    };
   }
 };
+
+/* ===================== CLEAN FORMATS ===================== */
+function cleanFormats(formats) {
+  const seen = new Set();
+
+  return formats
+    .filter(f => f.url && (f.height || f.format_note))
+    .map(f => ({
+      quality: f.format_note || `${f.height || "unknown"}p`,
+      height: f.height || 0,
+      url: f.url
+    }))
+    .filter(f => {
+      if (seen.has(f.url)) return false;
+      seen.add(f.url);
+      return true;
+    })
+    .sort((a, b) => b.height - a.height);
+}
+
+/* ===================== BEST QUALITY PICKER ===================== */
+function getBestFormat(formats) {
+  if (!formats.length) return null;
+
+  return formats.reduce((best, current) => {
+    return (current.height || 0) > (best.height || 0) ? current : best;
+  }, formats[0]);
+}
