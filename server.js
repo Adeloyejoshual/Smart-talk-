@@ -1,59 +1,43 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import path from "path";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+
+dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+/* ===================== PATH FIX ===================== */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /* ===================== MIDDLEWARE ===================== */
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "*"
-}));
-
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-/* ===================== API ROUTES ===================== */
+/* ===================== ROUTES ===================== */
+import downloadRoutes from "./routes/downloadRoutes.js";
+app.use("/api/download", downloadRoutes);
 
-// Example route (replace with your real ones)
-app.use("/api/download", require("./routes/downloadRoutes"));
-
-// Health check
+/* ===================== HEALTH ===================== */
 app.get("/api/health", (req, res) => {
-  res.json({
-    status: "OK",
-    message: "Server running successfully"
-  });
+  res.json({ status: "OK" });
 });
 
 /* ===================== STATIC FRONTEND ===================== */
-/*
-  React build folder (Vite/CRA output)
-*/
-const frontendPath = path.join(__dirname, "dist");
+const distPath = path.join(__dirname, "dist");
 
-app.use(express.static(frontendPath));
+app.use(express.static(distPath));
 
-/* ===================== REACT ROUTING ===================== */
-/*
-  This makes React Router work properly
-*/
 app.get("*", (req, res) => {
-  if (req.path.startsWith("/api/")) {
-    return res.status(404).json({ message: "API route not found" });
-  }
+  if (req.path.startsWith("/api/")) return;
 
-  res.sendFile(path.join(frontendPath, "index.html"));
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
-/* ===================== 404 FALLBACK ===================== */
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
-/* ===================== START SERVER ===================== */
-const PORT = process.env.PORT || 5000;
-
+/* ===================== START ===================== */
 app.listen(PORT, () => {
-  console.log(`🚀 Full Stack App running on port ${PORT}`);
+  console.log(`🚀 Server running on ${PORT}`);
 });
