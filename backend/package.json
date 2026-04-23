@@ -1,11 +1,15 @@
 {
-  "name": "backend",
+  "name": "all-downloader-backend",
   "version": "1.0.0",
+  "description": "Backend API for All Downloader app",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -17,5 +21,12 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
-  }
+  },
+  "keywords": [
+    "downloader",
+    "api",
+    "express",
+    "video-downloader"
+  ],
+  "license": "ISC"
 }
