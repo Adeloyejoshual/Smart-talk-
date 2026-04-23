@@ -1,29 +1,28 @@
+
 import { extractMedia } from "../services/extractorService.js";
 
 export const downloadMedia = async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
-    return res.status(400).json({
-      success: false,
-      error: "URL is required"
-    });
+    return res.status(400).json({ error: "URL is required" });
   }
 
   try {
     const data = await extractMedia(url);
 
-    res.json({
+    return res.json({
       success: true,
       data
     });
 
   } catch (err) {
-    console.error(err);
+    console.error("Download error:", err.message);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
-      error: "Failed to process video"
+      error: "Failed to process video",
+      details: err.message
     });
   }
 };
