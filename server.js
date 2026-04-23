@@ -1,79 +1,59 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-import downloadRoutes from "./routes/downloadRoutes.js";
-
-dotenv.config();
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-
-/* ===================== PATH SETUP ===================== */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 /* ===================== MIDDLEWARE ===================== */
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*"
+}));
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 /* ===================== API ROUTES ===================== */
-app.use("/api/download", downloadRoutes);
 
+// Example route (replace with your real ones)
+app.use("/api/download", require("./routes/downloadRoutes"));
+
+// Health check
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
-    message: "Smart Talk Backend running"
+    message: "Server running successfully"
   });
 });
 
-/* ===================== ROOT ROUTE ===================== */
+/* ===================== STATIC FRONTEND ===================== */
 /*
-  IMPORTANT:
-  React (src/main.jsx) handles UI in development (Vite).
-  So Express only returns API info here.
+  React build folder (Vite/CRA output)
 */
-app.get("/", (req, res) => {
-  res.json({
-    app: "AllDownloader API",
-    status: "running",
-    frontend: "handled by React (Vite)",
-    endpoints: {
-      health: "/api/health",
-      download: "/api/download (POST)"
-    }
-  });
+const frontendPath = path.join(__dirname, "dist");
+
+app.use(express.static(frontendPath));
+
+/* ===================== REACT ROUTING ===================== */
+/*
+  This makes React Router work properly
+*/
+app.get("*", (req, res) => {
+  if (req.path.startsWith("/api/")) {
+    return res.status(404).json({ message: "API route not found" });
+  }
+
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
 
-/* ===================== STATIC FRONTEND (OPTIONAL PROD) ===================== */
-/*
-  ONLY WORKS AFTER: npm run build
-  If you deploy React build inside server
-*/
-if (process.env.NODE_ENV === "production") {
-  const distPath = path.join(__dirname, "dist");
-
-  app.use(express.static(distPath));
-
-  app.get("*", (req, res) => {
-    if (req.path.startsWith("/api/")) return;
-
-    res.sendFile(path.join(distPath, "index.html"));
-  });
-}
-
-/* ===================== 404 HANDLER ===================== */
+/* ===================== 404 FALLBACK ===================== */
 app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    error: "Route not found",
-    hint: "Check API endpoint (/api/...)"
-  });
+  res.status(404).json({ message: "Route not found" });
 });
 
 /* ===================== START SERVER ===================== */
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Full Stack App running on port ${PORT}`);
 });
