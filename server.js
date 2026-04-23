@@ -17,22 +17,10 @@ app.use(express.json());
 app.use("/api/download", downloadRoutes);
 
 app.get("/api/health", (req, res) => {
-  res.json({
-    status: "OK",
-    message: "Backend running"
-  });
-});
-
-/* ===================== ROOT ===================== */
-app.get("/", (req, res) => {
-  res.json({
-    app: "AllDownloader API",
-    status: "running",
-    endpoints: ["/api/download", "/api/health"]
-  });
+  res.json({ status: "OK" });
 });
 
 /* ===================== START ===================== */
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });
