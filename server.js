@@ -13,14 +13,38 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-/* ===================== ROUTES ===================== */
-app.use("/api/download", downloadRoutes);
-
-app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "Server running" });
+/* ===================== HOME ROUTE ===================== */
+app.get("/", (req, res) => {
+  res.json({
+    app: "Smart Talk Backend",
+    status: "running",
+    endpoints: {
+      health: "/api/health",
+      download: "/api/download (POST)"
+    }
+  });
 });
 
-/* ===================== START ===================== */
+/* ===================== HEALTH CHECK ===================== */
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: "OK",
+    message: "Backend is running"
+  });
+});
+
+/* ===================== API ROUTES ===================== */
+app.use("/api/download", downloadRoutes);
+
+/* ===================== 404 HANDLER ===================== */
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    hint: "Check URL and HTTP method (GET/POST)"
+  });
+});
+
+/* ===================== START SERVER ===================== */
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
