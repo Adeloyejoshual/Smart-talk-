@@ -1,32 +1,13 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>AllDownloader</title>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>AllDownloader</title>
+  </head>
+  <body>
+    <div id="root"></div>
 
-<h2>Download Videos Instantly</h2>
-
-<input id="url" placeholder="Paste link..." />
-<button onclick="download()">Download</button>
-
-<pre id="result">Waiting...</pre>
-
-<script>
-async function download() {
-  const url = document.getElementById("url").value;
-
-  const res = await fetch("/api/download", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ url })
-  });
-
-  const data = await res.json();
-  document.getElementById("result").innerText =
-    JSON.stringify(data, null, 2);
-}
-</script>
-
-</body>
+    <!-- Vite React entry -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
