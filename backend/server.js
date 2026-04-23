@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import downloadRoutes from "./routes/downloadRoutes.js";
+import downloadRoutes from "../routes/downloadRoutes.js";
 
 dotenv.config();
 
