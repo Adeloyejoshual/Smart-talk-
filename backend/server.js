@@ -18,16 +18,31 @@ app.get("/", (req, res) => {
   res.json({
     app: "Smart Talk Backend",
     status: "running",
-    endpoints: ["/api/download", "/api/health"]
+    endpoints: {
+      health: "/api/health",
+      download: "/api/download (POST)"
+    }
   });
 });
 
-/* ===================== API ROUTES ===================== */
-app.use("/api/download", downloadRoutes);
-
 /* ===================== HEALTH CHECK ===================== */
 app.get("/api/health", (req, res) => {
-  res.json({ status: "OK", message: "Backend is running" });
+  res.json({
+    status: "OK",
+    message: "Backend is running"
+  });
+});
+
+/* ===================== DOWNLOAD ROUTES ===================== */
+// IMPORTANT: this must handle POST /api/download
+app.use("/api/download", downloadRoutes);
+
+/* ===================== 404 HANDLER (IMPORTANT FIX) ===================== */
+app.use((req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    hint: "Check API endpoint and method (GET/POST)"
+  });
 });
 
 /* ===================== START SERVER ===================== */
