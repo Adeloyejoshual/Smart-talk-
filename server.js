@@ -6,37 +6,34 @@ import { fileURLToPath } from "url";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-/* ================= PATH ================= */
+/* ================= PATH SETUP ================= */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// IMPORTANT: this must point to your built frontend
 const distPath = path.join(__dirname, "dist");
 
 /* ================= MIDDLEWARE ================= */
 app.use(cors());
 app.use(express.json());
 
-/* ================= API ================= */
-app.use("/api/download", (req, res) => {
-  return res.json({ success: true, message: "API working" });
+/* ================= API ROUTES ================= */
+app.get("/api/status", (req, res) => {
+  res.json({ success: true, message: "API is working" });
 });
 
-/* ================= STATIC FILES ================= */
-// serve built assets (js, css, images)
+/* ================= STATIC FRONTEND ================= */
 app.use(express.static(distPath));
 
-/* ================= SPA FALLBACK ================= */
-// for any non-API route, send React index.html
+/* ================= SPA ROUTE FIX ================= */
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api/")) {
-    return res.status(404).json({ error: "API route not found" });
+    return res.status(404).json({ error: "API not found" });
   }
 
-  res.sendFile(path.resolve(distPath, "index.html"));
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
-/* ================= START ================= */
+/* ================= START SERVER ================= */
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
