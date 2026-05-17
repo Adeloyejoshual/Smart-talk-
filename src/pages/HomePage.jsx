@@ -1,38 +1,35 @@
-import { useState } from "react";
+// LoginPage.jsx
+import React from "react";
+import "./login.css";
 
-export default function HomePage() {
-  const [url, setUrl] = useState("");
-  const [result, setResult] = useState(null);
-
-  const download = async () => {
-    const res = await fetch("/api/download", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url })
-    });
-
-    const data = await res.json();
-    setResult(data);
-  };
-
+export default function LoginPage() {
   return (
-    <div style={{ textAlign: "center", padding: 40 }}>
-      <h1>🔥 AllDownloader</h1>
+    <div className="login-container">
+      <div className="login-left">
+        <h1 className="brand">MyApp</h1>
+        <p>
+          Connect with friends and the world around you on MyApp.
+        </p>
+      </div>
 
-      <input
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-        placeholder="Paste link..."
-        style={{ padding: 10, width: 300 }}
-      />
+      <div className="login-right">
+        <div className="login-card">
+          <input type="text" placeholder="Email or Phone Number" />
+          <input type="password" placeholder="Password" />
 
-      <button onClick={download} style={{ marginLeft: 10 }}>
-        Download
-      </button>
+          <button className="login-btn">Log In</button>
 
-      <pre style={{ marginTop: 20 }}>
-        {JSON.stringify(result, null, 2)}
-      </pre>
+          <a href="#" className="forgot">
+            Forgotten password?
+          </a>
+
+          <hr />
+
+          <button className="create-btn">
+            Create New Account
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
